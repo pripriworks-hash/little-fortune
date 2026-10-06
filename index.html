@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Little Fortune — crack one open, or send one to a friend</title>
+  <meta name="description" content="A fortune cookie for the hard days of a long job search. Crack one for yourself, or send one to a friend with a note.">
+  <meta name="theme-color" content="#A8001B">
+  <meta property="og:title" content="Someone sent you a fortune cookie">
+  <meta property="og:description" content="Crack it open. It takes a few seconds.">
+  <meta property="og:image" content="https://pripriworks-hash.github.io/little-fortune/assets/cookie-whole.png">
+  <meta property="og:url" content="https://pripriworks-hash.github.io/little-fortune/">
+  <link rel="icon" type="image/png" href="assets/cookie-whole.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Yellowtail&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,100,1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" as="image" href="assets/cookie-cracked.png">
+  <link rel="preload" as="image" href="assets/cookie-left.png">
+  <link rel="preload" as="image" href="assets/cookie-right.png">
+</head>
+<body>
+  <a class="brand" href="#" aria-label="Little Fortune, home">
+    <span class="brand-script">little</span>
+    <span class="brand-caps"><span aria-hidden="true">✷</span> fortune <span aria-hidden="true">✷</span></span>
+  </a>
+
+  <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true" aria-label="Sound" title="Sound on">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/>
+      <path class="waves" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.8 7.8 0 0 1 0 11"/>
+      <path class="cross" d="M16 9.5l5 5m0-5l-5 5"/>
+    </svg>
+  </button>
+
+  <main id="app">
+    <!-- Home -->
+    <section class="view" id="view-home" hidden>
+      <h1 class="headline" tabindex="-1">A little luck for a long&nbsp;search.</h1>
+      <p class="sub">Crack open a fortune written for the hard days, or send one to a friend who could use it.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#open">Open a fortune</a>
+        <a class="btn btn-secondary" href="#send">Send a fortune</a>
+      </div>
+    </section>
+
+    <!-- Cookie: used for opening your own and for a gifted one -->
+    <section class="view" id="view-cookie" hidden>
+      <div class="gift-head" id="gift-head" hidden>
+        <h1 class="headline headline-sm" id="gift-title" tabindex="-1"></h1>
+        <blockquote class="note" id="gift-note"></blockquote>
+      </div>
+      <h1 class="visually-hidden" id="cookie-title" tabindex="-1">Your fortune cookie</h1>
+
+      <div class="stage" id="stage" data-state="whole">
+        <button class="cookie-btn" id="cookie-btn" type="button" aria-label="Fortune cookie. Tap to crack it open.">
+          <img class="cookie cookie-whole" src="assets/cookie-whole.png" alt="" width="279" height="239">
+        </button>
+        <img class="cookie cookie-cracked" src="assets/cookie-cracked.png" alt="" width="414" height="237">
+        <img class="cookie cookie-left" src="assets/cookie-left.png" alt="" width="493" height="242">
+        <img class="cookie cookie-right" src="assets/cookie-right.png" alt="" width="493" height="242">
+        <div class="slip-wrap">
+          <div class="slip" id="slip" aria-hidden="true">
+            <p class="slip-text" id="fortune-text"></p>
+            <p class="slip-lucky" id="fortune-lucky"></p>
+          </div>
+        </div>
+        <p class="hint" id="hint">Tap to crack</p>
+      </div>
+      <p class="visually-hidden" id="fortune-live" aria-live="polite"></p>
+
+      <!-- Space is reserved for the buttons so nothing jumps when they appear. -->
+      <div class="after">
+        <div class="actions actions-after" id="after-actions" hidden>
+          <button class="btn btn-secondary" id="again-btn" type="button">Crack another</button>
+          <a class="btn btn-primary" id="forward-btn" href="#send">Send one to a friend</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Send form -->
+    <section class="view" id="view-send" hidden>
+      <h1 class="headline headline-sm" tabindex="-1">Send a fortune</h1>
+      <p class="sub">Write a short note. Your friend cracks their own cookie, so the fortune is a surprise for both of you.</p>
+      <form class="card" id="send-form" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="from">Your name</label>
+            <input id="from" name="from" type="text" maxlength="40" autocomplete="given-name" required aria-describedby="from-error">
+            <p class="error" id="from-error" hidden>Add your name so they know who it's from.</p>
+          </div>
+          <div class="field">
+            <label for="to">Friend's name</label>
+            <input id="to" name="to" type="text" maxlength="40" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label for="message">Message <span class="optional">(optional)</span></label>
+          <textarea id="message" name="message" rows="4" maxlength="200" placeholder="Thinking of you." aria-describedby="count"></textarea>
+          <p class="count" id="count">0/200</p>
+        </div>
+        <button class="btn btn-dark" type="submit">Wrap it up</button>
+      </form>
+    </section>
+
+    <!-- Link ready -->
+    <section class="view" id="view-ready" hidden>
+      <h1 class="headline headline-sm" tabindex="-1">Your cookie is ready</h1>
+      <div class="preview">
+        <img src="assets/cookie-whole.png" alt="" width="279" height="239">
+        <div>
+          <p class="preview-title" id="preview-title"></p>
+          <p class="preview-note" id="preview-note"></p>
+        </div>
+      </div>
+      <div class="link-row">
+        <input id="link" type="text" readonly aria-label="Gift link">
+        <button class="btn btn-primary" id="copy-btn" type="button">Copy link</button>
+      </div>
+      <p class="status" id="copy-status" role="status"></p>
+      <div class="share">
+        <button class="text-link" id="share-btn" type="button" hidden>Share…</button>
+        <a class="text-link" id="email-link" href="#">Send by email</a>
+        <a class="text-link" id="sms-link" href="#">Send by text</a>
+        <a class="text-link" id="preview-link" href="#">Preview it</a>
+      </div>
+      <p class="fine">Nothing is stored. Your note lives in the link itself.</p>
+    </section>
+  </main>
+
+  <img class="takeout" src="assets/takeout.png" alt="" width="334" height="376">
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+  <script src="fortunes.js"></script>
+  <script src="fx.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
